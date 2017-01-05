@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <title>Firebase chat</title>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+            <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+            <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+            
+            <!--<script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>-->
+            
+            <script src="https://www.gstatic.com/firebasejs/3.6.4/firebase.js"></script>
+            <!--<script src="https://www.gstatic.com/firebasejs/3.6.2/firebase-auth.js"></script>-->
+
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+            
+            <link rel="stylesheet" href="index.css">
+            <script src="index.js"></script>
+            
+    </head>
+    <body onload='init()'>
+        <div id='container'>
+            <div id='about_dialog' title='About'>Firebase Chat<br>Created by<br>Burey<br>&&<br>Michael Ermishin</div>
+            <div id='table_connected_users_container' title='Who is online?'>
+            <table id='table_connected_users'><tr><th style='color:green;'>Connected Users</th></tr></table>
+            </div>
+            
+            <h1 class="headline">Firebase Chat <span class='about'>*<u class='about'>About</u>*</span>
+            <br class='half_br'><a href="https://www.sololearn.com/Profile/197327" id="name_tag">By Burey</a><span id="name_tag_michael"> & </span><a href="https://www.sololearn.com/Profile/1249360">Michael Ermishin (C00l Ha43r)</a></h1>    
+            
+            <div id='container_login'>
+                <input id='login_name' class="input" placeholder='User Name:'>
+                <br>
+                <input id='login_pass' class='input' placeholder='Password:' type='text'>
+                <br>
+                <label><input id='chk_show_password' type='checkbox' checked> Show Password</label>
+                <br>
+                <button id='btn_login' class='button'>Login</button>
+                <button id='btn_new_user' class='button'>New User</button>
+                <br><br>
+                
+                <div id='message_before_i_sleep'>
+                Some messages before i go to sleep:
+                <br>
+                1) New chat supports user authentication
+                <br>
+                2) First time users: pick a username (no spaces like in the old chat) and password you can remember
+                <br>
+                3) Those will be used for future authentication and enable you to edit/delete your own messages
+                <br>
+                4) ????
+                <br>
+                5) &#x1F634;&#x1F634;&#x1F634;&#x1F634;&#x1F634;
+                </div>
+            </div>
+                        
+            <div id='container_chat' style='display:none'>
+                <label id='logged_user_name'>Logged in as:</label>
+                <button id='btn_logout' class='button'>Logout</button>
+                <br><br>
+                <label class='input'><input id='chkbox_notify' type='checkbox' checked>Notifications</label>
+                <label class='input'><input id='chkbox_notify_vibrate' type='checkbox'>Vibrate</label>
+                <br><br>
+                <table>
+                <tr>
+                    <td class='emoji_table' id='thumb_up'>&#x1f44d;</td>
+                    <td class='emoji_table' id='thumb_down'>&#x1f44e;</td>
+                    <td class='emoji_table' id='cursor_pointer'>&#x1f446;</td>
+                    <td class='emoji_table' id='emoji_tears'>&#x1f602;</td>
+                    <td class='emoji_table' id='emoji_cold_sweat'>&#x1f605;</td>
+                    <td class='emoji_table' id='emoji_grin'>&#x1f601;</td>
+                    <td class='emoji_table' id='emoji_cool'>&#x1f60e;</td>
+                    <td class='emoji_table' id='emoji_inlove'>&#x1f60d;</td>
+                    <td class='emoji_table' id='emoji_sleepy'>&#x1F634;</td>
+                    <td class='emoji_table' id='emoji_neutral'>&#x1F611;</td>
+                    <td class='emoji_table' id='emoji_flushed'>&#x1F633;</td>
+                    <td class='emoji_table' id='emoji_tongue'>&#x1F61B;</td>
+                    <td class='emoji_table' id='emoji_grimacing'>&#x1F62C;</td>
+                    <td class='emoji_table' id='emoji_heart'>&#x1F497;</td>
+                </tr>
+                <tr>
+                    <td class='emoji_table' id='emoji_dizzy'>&#x1f635;</td>
+                    <td class='emoji_table' id='emoji_angel'>&#x1F607;</td>
+                    <td class='emoji_table' id='emoji_devil'>&#x1f608;</td>
+                    <td class='emoji_table' id='emoji_angry'>&#x1f620;</td>
+                    <td class='emoji_table' id='emoji_kissy'>&#x1f61a;</td>
+                    <td class='emoji_table' id='emoji_triumph'>&#x1f624;</td>
+                    <td class='emoji_table' id='emoji_crying'>&#x1f622;</td>
+                    <td class='emoji_table' id='emoji_waterfall_tears'>&#x1F62D;</td>
+                    <td class='emoji_table' id='emoji_>_<'>&#x1F61D;</td>
+                    <td class='emoji_table' id='emoji_OMG'>&#x1F631;</td>
+                    <td class='emoji_table' id='emoji_poo'>&#x1F4A9;</td>
+                    <td class='emoji_table' id='emoji_cow'>&#x1F404;</td>
+                    <td class='emoji_table' id='emoji_dash'>&#x1F4A8;</td>
+                    <td class='emoji_table' id='emoji_plant'>&#x1F33E;</td>
+                </tr>
+                <tr> 
+                    <td class='emoji_table' id='emoji_hamburger'>&#x1F354;</td>
+                    <td class='emoji_table' id='emoji_fries'>&#x1F35F;</td>
+                    <td class='emoji_table' id='emoji_pizza'>&#x1F355;</td>
+                    <td class='emoji_table' id='emoji_spaghetti'>&#x1F35D;</td>
+                    <td class='emoji_table' id='emoji_riceball'>&#x1F358;</td>
+                    <td class='emoji_table' id='emoji_cake'>&#x1F382;</td>
+                    <td class='emoji_table' id='emoji_doughnut'>&#x1F369;</td>
+                    <td class='emoji_table' id='emoji_clink_beers'>&#x1F37B;</td>
+                    <td class='emoji_table' id='emoji_tropical'>&#x1F379;</td>
+                    <td class='emoji_table' id='emoji_balloon'>&#x1F388;</td>
+                    <td class='emoji_table' id='emoji_party_popper'>&#x1F389;</td>
+                    <td class='emoji_table' id='emoji_confetti_ball'>&#x1F38A;</td>
+                    <td></td>
+                    <td class='emoji_table' id='url_link'>URL</td>
+                </tr>
+                </table>
+                
+ 
+                <textarea id='new_message' rows='3' cols='25' class="input" placeholder='Message:'></textarea>
+
+                <br><br>
+                <div id='new_post_controls'>
+                <button id='btn_new_post' class='button'>Post</button>
+                <button id='show_connected' class='button'>Connected Users:</button>
+                </div>
+                <div id='update_post_controls' style='display:none'>
+                <button id='btn_update_post' class='button'>Update</button>
+                <button id='btn_update_cancel' class='button'>Cancel</button>
+                </div>
+                <div id='message_list'></div>
+                 <div class="loader"></div>
+            </div>
+        </div>
+        
+        
+        <script>
+      var config = {
+        apiKey: "AIzaSyBJHstfaR2LClIae1c6iAt9csjeQGFuaAM",
+        authDomain: "sololearnfirebasechat-5bb04.firebaseapp.com",
+        databaseURL: "https://sololearnfirebasechat-5bb04.firebaseio.com",
+        storageBucket: "sololearnfirebasechat-5bb04.appspot.com",
+        messagingSenderId: "847331313248"
+      };
+      firebase.initializeApp(config);
+        </script>
+        
+ 
+     <!--<script>-->
+     <!-- var config = {-->
+     <!--   apiKey: "AIzaSyDx95KGqIZcCf8NOkxJ7oP4GJ5IOUkBG_E",-->
+     <!--   authDomain: "bureychat.firebaseapp.com",-->
+     <!--   databaseURL: "https://bureychat.firebaseio.com",-->
+     <!--   storageBucket: "bureychat.appspot.com",-->
+     <!--   messagingSenderId: "1032682003626"-->
+     <!-- };-->
+     <!-- firebase.initializeApp(config);-->
+     <!--       </script>-->
+        
+        
+    </body>
+</html>
