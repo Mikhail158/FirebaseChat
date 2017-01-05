@@ -463,6 +463,7 @@ function init() {
                 var message_author = $(this).parent().parent().find('.message_author').text();
                 var message_body = $(this).parent().parent().parent().find('.message_body').text();
 
+                alert(message_body)
                 global_msg = {
                     msgId:id,
                     author:message_author,
