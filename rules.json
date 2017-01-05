@@ -8,6 +8,18 @@
          ".write":"(newData.exists() || !newData.exists()) && !$username.contains('<script>')"
          }
       },
+        "mod_list":{
+          ".read": false,
+          ".write":false,
+            					// old entry cannot exists							// only an existing mod can add a new mod
+            					// to add mod use inside firebase.auth().onAuthStateChanged(...) or after you been authenticated
+            					// db_ref.ref("mod_list").child(<new mod uid string>).set({username:loginName,lastOnline:firebase.database.ServerValue.TIMESTAMP});
+//           ".write": "(!data.exists() && newData.exists()) && root.child('mod_list').child(auth.uid).exists()",
+            "$mod_id":{
+//               ".read": false,
+//           		".write": false
+            }
+        },
       "user_list":{
           ".read": false,
         						// create new user id
@@ -31,7 +43,8 @@
       "$message": {
 
       	".read":"auth !== null",
-          ".write": "auth != null && (!data.exists() || (!newData.exists() && data.child('user_id').val() === auth.uid) || (newData.exists() && data.child('user_id').val() === auth.uid))",// && newData.hasChild('user_id')",
+          				// (only mods can edit/delete)										OR	(authenticated user AND old data does not exists OR delete if the user is the owner of the post OR edit if the user is the owner of the post)
+        ".write": "root.child('mod_list').child(auth.uid).exists() ||  auth != null && (!data.exists() || (!newData.exists() && data.child('user_id').val() === auth.uid) || (newData.exists() && data.child('user_id').val() === auth.uid))",// && newData.hasChild('user_id')",
         ".validate": "newData.hasChildren(['author', 'user_id', 'body', 'time'])",
         "author": {
           ".validate": "newData.isString() && newData.val().length <= 20 && newData.val().length > 0 && !newData.val().contains('<script>')"
