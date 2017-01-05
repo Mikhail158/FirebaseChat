@@ -1,0 +1,51 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+      "connected":{
+       ".read": true,
+         "$username": {
+         ".write":"(newData.exists() || !newData.exists()) && !$username.contains('<script>')"
+         }
+      },
+      "user_list":{
+          ".read": false,
+        						// create new user id
+        ".write": "(!data.exists() && newData.exists())",
+          "$user_id":{
+          ".read":true,
+            					// add new user												// update user entry
+        ".write": "auth != null && ((!data.exists() && newData.exists()) || (data.exists() && newData.exists()))",
+        ".validate": "newData.hasChildren(['username','lastOnline'])",
+          "username":{
+            ".validate": "newData.isString() && newData.val().length <= 20 && newData.val().length > 1"
+          },
+          "lastOnline":{
+            ".validate": "newData.isNumber()"
+          }  
+        }
+      },
+      "chat_messages":{
+      ".read": true,
+      ".indexOn": ["time"],
+      "$message": {
+
+      	".read":"auth !== null",
+          ".write": "auth != null && (!data.exists() || (!newData.exists() && data.child('user_id').val() === auth.uid) || (newData.exists() && data.child('user_id').val() === auth.uid))",// && newData.hasChild('user_id')",
+        ".validate": "newData.hasChildren(['author', 'user_id', 'body', 'time'])",
+        "author": {
+          ".validate": "newData.isString() && newData.val().length <= 20 && newData.val().length > 0 && !newData.val().contains('<script>')"
+        },
+        "pass":{
+          ".validate": "newData.isString() && newData.val().length <= 20 && newData.val().length > 0 && !newData.val().contains('<script>')"
+        },
+        "body": {
+          ".validate": "newData.isString() && newData.val().length <= 256 && newData.val().length > 0"
+        },
+        "time": {
+          ".validate": "newData.isNumber()"
+        }
+      }   
+    }
+  }
+}
